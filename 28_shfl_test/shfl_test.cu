@@ -6,14 +6,18 @@
 __global__ void test_shfl_broadcast(int *in,int*out,int const srcLans)
 {
     int value=in[threadIdx.x];
+    printf("value: %d\n",value);
+    __syncthreads();
     value=__shfl(value,srcLans,BDIM);
+    printf("value: %d\n",value);
+    __syncthreads();
     out[threadIdx.x]=value;
 
 }
 
 __global__ void test_shfl_up(int *in,int*out,int const delta)
 {
-    int value=in[threadIdx.x];
+    int value=in[threadIdx.x];  //线程内的寄存器变量value
     value=__shfl_up(value,delta,BDIM);
     out[threadIdx.x]=value;
 

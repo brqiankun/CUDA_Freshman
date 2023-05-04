@@ -21,9 +21,9 @@ __global__ void setRowReadRow(int * out)
     __shared__ int tile[BDIMY][BDIMX];
     unsigned int idx=threadIdx.y*blockDim.x+threadIdx.x;
 
-    tile[threadIdx.y][threadIdx.x]=idx;
+    tile[threadIdx.y][threadIdx.x]=idx;  //共享内存写
     __syncthreads();
-    out[idx]=tile[threadIdx.y][threadIdx.x];
+    out[idx]=tile[threadIdx.y][threadIdx.x];   //从共享内存读，并写入全局内存
 }
 __global__ void setColReadCol(int * out)
 {
@@ -54,7 +54,7 @@ __global__ void setRowReadCol(int * out)
 }
 __global__ void setRowReadColDyn(int * out)
 {
-    extern __shared__ int tile[];
+    extern __shared__ int tile[];  //extern 表示运行时分配，在核函数调用时进行分配
     unsigned int row_idx=threadIdx.y*blockDim.x+threadIdx.x;
     unsigned int col_idx=threadIdx.x*blockDim.y+threadIdx.y;
     tile[row_idx]=row_idx;
@@ -196,7 +196,7 @@ int main(int argc,char **argv)
       }
       case 4:
       {
-            setRowReadColDyn<<<grid,block,(BDIMX)*BDIMY*sizeof(int)>>>(out);
+            setRowReadColDyn<<<grid,block,(BDIMX)*BDIMY*sizeof(int)>>>(out);   //在核函数运行时分配动态的共享内存
             cudaDeviceSynchronize();
             iElaps=cpuSecond()-iStart;
             printf("setRowReadColDyn  ");

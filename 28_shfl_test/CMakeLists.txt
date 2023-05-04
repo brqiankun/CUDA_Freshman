@@ -1,1 +1,3 @@
 add_executable(shfl_test shfl_test.cu)
+add_executable(warp_shuffle warp_shuffle.cu)
+add_executable(reduction_across_one_warp reduction_across_one_warp.cu)

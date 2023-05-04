@@ -41,7 +41,7 @@ int main()
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
     cudaEventRecord(start,0);
-omp_set_num_threads(n_stream);
+omp_set_num_threads(n_stream);   //ompAPI 创建n_stream个线程  #pragma omp parallel使编译器下面大括号的部分是每个主机线程要执行的部分
 #pragma omp parallel
     {      
         int i=omp_get_thread_num();

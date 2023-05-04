@@ -55,12 +55,12 @@ __global__ void transformSmem(float * in,float* out,int nx,int ny)
 	__shared__ float tile[BDIMY][BDIMX];
 	unsigned int ix,iy,transform_in_idx,transform_out_idx;
 	ix=threadIdx.x+blockDim.x*blockIdx.x;
-    iy=threadIdx.y+blockDim.y*blockIdx.y;
+  iy=threadIdx.y+blockDim.y*blockIdx.y;
 	transform_in_idx=iy*nx+ix;
 
 	unsigned int bidx,irow,icol;
 	bidx=threadIdx.y*blockDim.x+threadIdx.x;
-	irow=bidx/blockDim.y;
+	irow=bidx/blockDim.y;   //转置后的行和列
 	icol=bidx%blockDim.y;
 
 
@@ -87,9 +87,9 @@ __global__ void transformSmemPad(float * in,float* out,int nx,int ny)
     iy=threadIdx.y+blockDim.y*blockIdx.y;
 	transform_in_idx=iy*nx+ix;
 
-	unsigned int bidx,irow,icol;
+	unsigned int bidx,irow,icol;  //块内的idx
 	bidx=threadIdx.y*blockDim.x+threadIdx.x;
-	irow=bidx/blockDim.y;
+	irow=bidx/blockDim.y;   //块内转置
 	icol=bidx%blockDim.y;
 
 
@@ -130,6 +130,7 @@ __global__ void transformSmemUnrollPad(float * in,float* out,int nx,int ny)
 
 	transform_out_idx=iy2*ny+ix2;
 
+  //展开循环，同一个线程操作两个元素
 	if(ix+blockDim.x<nx&& iy<ny)
 	{
 		unsigned int row_idx=threadIdx.y*(blockDim.x*2+IPAD)+threadIdx.x;

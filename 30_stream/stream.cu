@@ -36,7 +36,7 @@ int main()
     cudaStream_t *stream=(cudaStream_t*)malloc(n_stream*sizeof(cudaStream_t));
     for(int i=0;i<n_stream;i++)
     {
-        cudaStreamCreate(&stream[i]);
+        cudaStreamCreate(&stream[i]);//为每个流分配资源
     }
     dim3 block(1);
     dim3 grid(1);
